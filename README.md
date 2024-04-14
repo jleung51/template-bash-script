@@ -1,2 +1,3 @@
-# template-bash-script
-Bash script template
+# Template Scripts
+
+Templates for scripts (Bash, Python, etc).
