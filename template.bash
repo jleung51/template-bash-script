@@ -72,6 +72,12 @@ function help() {
   exit 1
 }
 
+# Output the argument to stderr (file descriptor 2) and exit.
+abort() {
+  printf "%s\n" "$@" >&2
+  exit 1
+}
+
 # Parse all input flags.
 #
 # Arguments:
