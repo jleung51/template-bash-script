@@ -110,7 +110,8 @@ function parse_flags() {
 }
 
 ### MAIN
-
+# The code is wrapped in a main function which gets called at the end of the file
+# so a truncated partial download will not execute a partial script.
 function main() {
   parse_flags $@
   local start_time=$(date +%s)
