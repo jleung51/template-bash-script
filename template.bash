@@ -30,6 +30,20 @@ INPUT_A=false
 INPUT_B=""
 
 
+### STRING FORMATTERS
+if [[ -t 1 ]] then
+  tty_escape() { printf "\033[%sm" "$1"; }
+else
+  tty_escape() { :; }
+fi
+tty_underline="$(tty_escape "4;39")"
+tty_mkbold() { tty_escape "1;$1"; }
+tty_blue="$(tty_mkbold 34)"
+tty_red="$(tty_mkbold 31)"
+tty_bold="$(tty_mkbold 39)"
+tty_reset="$(tty_escape 0)"
+
+
 ### TITLER
 
 # Prints a title.
@@ -73,9 +87,28 @@ function help() {
 }
 
 # Output the argument to stderr (file descriptor 2) and exit.
-abort() {
+function abort() {
   printf "%s\n" "$@" >&2
   exit 1
+}
+
+# Use the shell's audible bell.
+function ring_bell() {
+  if [[ -t 1 ]] then
+    printf "\a"
+  fi
+}
+
+# Wait for user input to confirm continuation of process.
+function wait_for_user() {
+  local c
+  echo
+  echo "Press ${tty_bold}RETURN${tty_reset}/${tty_bold}ENTER${tty_reset} to continue or any other key to abort: "
+  getc c
+  # Test for \r and \n because some OSes use \r instead
+  if ! [[ "${c}" == $'\r' || "${c}" == $'\n' ]] then
+    exit 1
+  fi
 }
 
 # Parse all input flags.
