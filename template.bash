@@ -8,7 +8,7 @@
 
 set -e  # Exit on first failure
 set -u  # Fail on referencing undefined variable
-# set -x  # Output all commands to terminal
+# set -x  # Print out each command before it is executed
 set -o pipefail  # Return code is the same return code as the last command
 
 
@@ -42,6 +42,29 @@ tty_blue="$(tty_mkbold 34)"
 tty_red="$(tty_mkbold 31)"
 tty_bold="$(tty_mkbold 39)"
 tty_reset="$(tty_escape 0)"
+
+### UTILITY FUNCTIONS
+
+# Function which changes directory to the location of this script.
+function cdToScriptDirectory() {
+    cd "$(dirname "$0")"
+}
+
+# Function which verifies that an environment variable is set; exits otherwise.
+#
+# Args:
+#   $1: Name of the environment variable
+#   $2: Environment variable itself
+#
+# Example:
+#   requireEnvVariable USERNAME ${USERNAME}
+#
+function requireEnvVariable() {
+    if [[ -z ${2+set} ]]; then
+        echo "Error: Environment variable $1 is required."
+        exit 1
+    fi
+}
 
 
 ### TITLER
